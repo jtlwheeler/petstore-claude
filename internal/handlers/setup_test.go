@@ -61,7 +61,7 @@ func TestMain(m *testing.M) {
 	orderRepo := repository.NewOrderRepository(pool)
 	userRepo := repository.NewUserRepository(pool)
 
-	h := handlers.SetupRoutes(petRepo, orderRepo, userRepo)
+	h := handlers.SetupRoutes(pool, petRepo, orderRepo, userRepo)
 	testServer = httptest.NewServer(h)
 	defer testServer.Close()
 

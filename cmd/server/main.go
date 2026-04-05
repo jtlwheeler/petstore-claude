@@ -33,7 +33,7 @@ func main() {
 	orderRepo := repository.NewOrderRepository(pool)
 	userRepo := repository.NewUserRepository(pool)
 
-	router := handlers.SetupRoutes(petRepo, orderRepo, userRepo)
+	router := handlers.SetupRoutes(pool, petRepo, orderRepo, userRepo)
 
 	port := os.Getenv("PORT")
 	if port == "" {

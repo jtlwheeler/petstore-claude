@@ -5,11 +5,13 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jtlwheeler/petstore/internal/repository"
 )
 
 // SetupRoutes wires all handlers to routes and returns the HTTP handler.
 func SetupRoutes(
+	pool *pgxpool.Pool,
 	petRepo *repository.PetRepository,
 	orderRepo *repository.OrderRepository,
 	userRepo *repository.UserRepository,
@@ -17,6 +19,9 @@ func SetupRoutes(
 	r := chi.NewRouter()
 	r.Use(middleware.Logger)
 	r.Use(middleware.Recoverer)
+
+	health := &healthHandler{pool: pool}
+	r.Get("/readyz", health.readyz)
 
 	petHandler := NewPetHandler(petRepo)
 	storeHandler := NewStoreHandler(orderRepo)
