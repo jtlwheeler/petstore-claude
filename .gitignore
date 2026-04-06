@@ -1,1 +1,10 @@
 .claude/
+
+# Terraform
+**/.terraform/
+*.tfstate
+*.tfstate.backup
+*.tfvars
+*.tfvars.json
+crash.log
+crash.*.log
