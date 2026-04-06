@@ -3,8 +3,7 @@ package db
 import (
 	"context"
 	"fmt"
-	"os"
-	"path/filepath"
+	"io/fs"
 	"sort"
 	"strings"
 
@@ -26,10 +25,10 @@ func Connect(ctx context.Context, connStr string) (*pgxpool.Pool, error) {
 	return pool, nil
 }
 
-// RunMigrations reads SQL files from the given directory in lexicographic order
+// RunMigrations reads SQL files from the given fs.FS in lexicographic order
 // and executes each one against the pool.
-func RunMigrations(ctx context.Context, pool *pgxpool.Pool, migrationsDir string) error {
-	entries, err := os.ReadDir(migrationsDir)
+func RunMigrations(ctx context.Context, pool *pgxpool.Pool, migrations fs.FS) error {
+	entries, err := fs.ReadDir(migrations, ".")
 	if err != nil {
 		return fmt.Errorf("reading migrations directory: %w", err)
 	}
@@ -43,8 +42,7 @@ func RunMigrations(ctx context.Context, pool *pgxpool.Pool, migrationsDir string
 	sort.Strings(files)
 
 	for _, filename := range files {
-		path := filepath.Join(migrationsDir, filename)
-		content, err := os.ReadFile(path)
+		content, err := fs.ReadFile(migrations, filename)
 		if err != nil {
 			return fmt.Errorf("reading migration file %s: %w", filename, err)
 		}

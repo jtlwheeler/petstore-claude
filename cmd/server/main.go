@@ -9,6 +9,7 @@ import (
 	"github.com/jtlwheeler/petstore/internal/db"
 	"github.com/jtlwheeler/petstore/internal/handlers"
 	"github.com/jtlwheeler/petstore/internal/repository"
+	"github.com/jtlwheeler/petstore/internal/db/migrations"
 )
 
 func main() {
@@ -25,7 +26,7 @@ func main() {
 	}
 	defer pool.Close()
 
-	if err := db.RunMigrations(ctx, pool, "./migrations"); err != nil {
+	if err := db.RunMigrations(ctx, pool, migrations.FS); err != nil {
 		log.Fatalf("running migrations: %v", err)
 	}
 

@@ -10,6 +10,7 @@ import (
 	"github.com/jtlwheeler/petstore/internal/db"
 	"github.com/jtlwheeler/petstore/internal/models"
 	"github.com/jtlwheeler/petstore/internal/repository"
+	"github.com/jtlwheeler/petstore/internal/db/migrations"
 	testcontainers "github.com/testcontainers/testcontainers-go"
 	"github.com/testcontainers/testcontainers-go/modules/postgres"
 	"github.com/testcontainers/testcontainers-go/wait"
@@ -57,7 +58,7 @@ func TestMain(m *testing.M) {
 	}
 	defer pool.Close()
 
-	if err := db.RunMigrations(ctx, pool, "../../migrations"); err != nil {
+	if err := db.RunMigrations(ctx, pool, migrations.FS); err != nil {
 		panic("running migrations: " + err.Error())
 	}
 
