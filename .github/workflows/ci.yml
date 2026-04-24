@@ -13,13 +13,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
-        with:
-          go-version-file: go.mod
+      - name: Install Dagger CLI
+        run: curl -fsSL https://dl.dagger.io/dagger/install.sh | sudo sh
 
       - name: Build
-        run: go build -o bin/server ./cmd/server
+        run: dagger -m ./ci call build --source=.
+
+      - name: Lint
+        run: dagger -m ./ci call lint --source=.
 
       - name: Test
-        run: go test ./... -timeout 120s
+        run: dagger -m ./ci call test --source=.
